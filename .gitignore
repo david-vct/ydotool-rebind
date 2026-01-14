@@ -1,0 +1,39 @@
+# Système
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Éditeurs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+*.sublime-project
+*.sublime-workspace
+
+# IDE
+.vim/
+.netrwhist
+
+# Logs
+*.log
+logs/
+
+# Backup
+*.bak
+*.backup
+*~
+
+# Fichiers temporaires
+tmp/
+temp/
+*.tmp
+
+# Dépendances (si applicable)
+node_modules/
+.env.local
