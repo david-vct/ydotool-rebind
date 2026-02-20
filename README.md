@@ -48,12 +48,6 @@ ydotool mousemove 100 100
 - Ligatures: æ, œ
 - All AZERTY/QWERTY symbols
 
-## Testing
-
-```bash
-./test.sh
-```
-
 ## Uninstall
 
 ```bash
