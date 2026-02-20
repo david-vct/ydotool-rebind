@@ -53,41 +53,41 @@ translate_azerty_to_qwerty() {
             
             # ===== ACCENTED VOWELS =====
             # Circumflex accent (lowercase)
-            'â') result+='a' ;;   # AZERTY â → QWERTY a
+            'â') result+='q' ;;   # AZERTY â → QWERTY q
             'ê') result+='e' ;;   # AZERTY ê → QWERTY e
             'î') result+='i' ;;   # AZERTY î → QWERTY i
             'ô') result+='o' ;;   # AZERTY ô → QWERTY o
             'û') result+='u' ;;   # AZERTY û → QWERTY u
             
             # Circumflex accent (uppercase)
-            'Â') result+='A' ;;
+            'Â') result+='Q' ;;
             'Ê') result+='E' ;;
             'Î') result+='I' ;;
             'Ô') result+='O' ;;
             'Û') result+='U' ;;
             
             # Diaeresis/Umlaut (lowercase)
-            'ä') result+='a' ;;
+            'ä') result+='q' ;;
             'ë') result+='e' ;;
             'ï') result+='i' ;;
             'ö') result+='o' ;;
             'ü') result+='u' ;;
             
             # Diaeresis/Umlaut (uppercase)
-            'Ä') result+='A' ;;
+            'Ä') result+='Q' ;;
             'Ë') result+='E' ;;
             'Ï') result+='I' ;;
             'Ö') result+='O' ;;
             'Ü') result+='U' ;;
             
             # Acute accent (lowercase)
-            'á') result+='a' ;;
+            'á') result+='q' ;;
             'í') result+='i' ;;
             'ó') result+='o' ;;
             'ú') result+='u' ;;
             
             # Acute accent (uppercase)
-            'Á') result+='A' ;;
+            'Á') result+='Q' ;;
             'Í') result+='I' ;;
             'Ó') result+='O' ;;
             'Ú') result+='U' ;;
