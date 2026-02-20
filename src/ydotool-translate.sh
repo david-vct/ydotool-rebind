@@ -212,6 +212,7 @@ translate_azerty_to_qwerty() {
 options=()
 text="$*"
 file_mode=0
+file_path=""
 
 # Handle ydotool type command options
 while [ $# -gt 0 ]; do
@@ -229,9 +230,9 @@ while [ $# -gt 0 ]; do
             shift 2
             ;;
         -f|--file)
-            # File mode - pass through without translation
+            # File mode - need to translate file content
             file_mode=1
-            options+=("$1" "$2")
+            file_path="$2"
             shift 2
             ;;
         -e|--escape)
@@ -256,9 +257,9 @@ while [ $# -gt 0 ]; do
             shift
             ;;
         -f=*|--file=*)
-            # File mode - pass through without translation
+            # File mode - need to translate file content
             file_mode=1
-            options+=("$1")
+            file_path="${1#*=}"
             shift
             ;;
         -e=*|--escape=*)
@@ -282,9 +283,34 @@ while [ $# -gt 0 ]; do
     esac
 done
 
-# If file mode, pass everything through without translation
+# If file mode, read file content, translate it, and pass to ydotool-real
 if [ "$file_mode" -eq 1 ]; then
-    /usr/bin/ydotool-real type "${options[@]}"
+    # Read from file or stdin
+    if [ "$file_path" = "-" ]; then
+        file_content=$(cat)
+    else
+        file_content=$(cat "$file_path")
+    fi
+
+    # Translate the content
+    translated=$(translate_azerty_to_qwerty "$file_content")
+
+    # Debug output if DEBUG env var is set
+    if [ -n "$DEBUG" ]; then
+        {
+            echo "=== File Mode Debug Log ==="
+            echo "Timestamp: $(date)"
+            echo "Full command: $0 $@"
+            echo "Options: ${options[*]}"
+            echo "File path: $file_path"
+            echo "Original content: $file_content"
+            echo "Translated content: $translated"
+            echo ""
+        } >> /tmp/ydotool-translate-debug.log
+    fi
+
+    # Pass translated content to ydotool-real via stdin
+    echo "$translated" | /usr/bin/ydotool-real type "${options[@]}" --file -
     exit $?
 fi
 
