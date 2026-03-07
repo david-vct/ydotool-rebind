@@ -31,12 +31,14 @@ fi
 
 # Install the wrapper
 echo "Installing ydotool wrapper..."
-ln -sf "$SCRIPT_DIR/src/ydotool-wrapper.sh" /usr/bin/ydotool
-chmod +x "$SCRIPT_DIR/src/ydotool-wrapper.sh"
+cp "$SCRIPT_DIR/src/ydotool-wrapper.sh"  /usr/bin/ydotool-wrapper.sh
+cp "$SCRIPT_DIR/src/ydotool-translate.sh"  /usr/bin/ydotool-translate.sh
+ln -sf /usr/bin/ydotool-wrapper.sh /usr/bin/ydotool
+chmod +x /usr/bin/ydotool-wrapper.sh
 
 # Make the translator executable
 echo "Setting up AZERTY to QWERTY translator..."
-chmod +x "$SCRIPT_DIR/src/ydotool-translate.sh"
+chmod +x /usr/bin/ydotool-translate.sh
 
 echo ""
 echo "✅ Installation successful!"
