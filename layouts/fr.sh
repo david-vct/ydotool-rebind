@@ -5,7 +5,7 @@
 # Only non-identity mappings are listed.
 # Characters not in this map pass through unchanged.
 
-declare -A KEYMAP=(
+KEYMAP=(
     # ===== NUMBER ROW =====
     # Unshifted
     ['&']='1'

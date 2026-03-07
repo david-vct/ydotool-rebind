@@ -97,6 +97,10 @@ translate_text() {
 
 # --- Main ---
 
+# Declare KEYMAP at global scope (must be here, not inside load_layout,
+# otherwise declare -A inside a function makes it local)
+declare -A KEYMAP
+
 # Detect and load layout
 LAYOUT=$(detect_layout)
 
