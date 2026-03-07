@@ -23,4 +23,10 @@ else
     echo "/usr/bin/ydotool-real not found"
 fi
 
-echo "✅ Uninstallation successful!"
+# Remove config and layouts
+if [ -d /etc/ydotool-rebind ]; then
+    echo "Removing configuration and layouts..."
+    rm -rf /etc/ydotool-rebind
+fi
+
+echo "Uninstallation successful!"
