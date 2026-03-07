@@ -16,9 +16,17 @@ fi
 if [ -f /usr/bin/ydotool-real ]; then
     echo "Restoring real ydotool..."
     rm -f /usr/bin/ydotool
+    rm -f /usr/bin/ydotool-wrapper.sh
+    rm -f /usr/bin/ydotool-translate.sh
     mv /usr/bin/ydotool-real /usr/bin/ydotool
 else
     echo "/usr/bin/ydotool-real not found"
 fi
 
-echo "✅ Uninstallation successful!"
+# Remove config and layouts
+if [ -d /etc/ydotool-rebind ]; then
+    echo "Removing configuration and layouts..."
+    rm -rf /etc/ydotool-rebind
+fi
+
+echo "Uninstallation successful!"
