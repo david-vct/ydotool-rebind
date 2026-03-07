@@ -82,11 +82,22 @@ Requires: root access, `ydotool` pre-installed, Bash 4.0+
 sudo ./uninstall.sh
 ```
 
+### Installation via .deb
+```bash
+sudo dpkg -i ydotool-rebind_1.1.0_all.deb
+# Désinstallation :
+sudo dpkg -r ydotool-rebind
+```
+
 ### Testing
 ```bash
 # Manual testing
 ydotool type "Bonjour, ça va ?"
 ydotool type "éèàù çœæ"
+
+# Dead keys testing (circumflex and diaeresis)
+ydotool type "la forêt où l'île rôtie"
+ydotool type "âêîôû äëïöü"
 
 # File mode testing (translates file content)
 echo "Bonjour" > /tmp/test.txt
@@ -97,6 +108,13 @@ echo "Bonjour" | ydotool type -f -
 # Debug mode (logs to /tmp/ydotool-translate-debug.log)
 DEBUG=1 ydotool type "test"
 DEBUG=1 ydotool type -f /tmp/test.txt
+```
+
+### Building .deb
+```bash
+# Structure: /tmp/ydotool-rebind_VERSION/DEBIAN/{control,postinst,prerm} + usr/bin/{scripts}
+dpkg-deb --build /tmp/ydotool-rebind_VERSION /tmp/ydotool-rebind_VERSION_all.deb
+# Publish: gh release create vVERSION file.deb --repo rcspam/ydotool-rebind
 ```
 
 Note: The README mentions `./test.sh` but no test script exists in the repository.
