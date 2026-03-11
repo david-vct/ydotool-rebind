@@ -52,40 +52,40 @@ translate_azerty_to_qwerty() {
             'Ù') result+="'" ;;   # AZERTY Ù → QWERTY '
             
             # ===== ACCENTED VOWELS =====
-            # Circumflex accent (lowercase)
-            'â') result+='q' ;;   # AZERTY â → QWERTY q
-            'ê') result+='e' ;;   # AZERTY ê → QWERTY e
-            'î') result+='i' ;;   # AZERTY î → QWERTY i
-            'ô') result+='o' ;;   # AZERTY ô → QWERTY o
-            'û') result+='u' ;;   # AZERTY û → QWERTY u
-            
+            # Circumflex accent (lowercase) - dead key ^ = [ on QWERTY
+            'â') result+='[q' ;;  # ^ (dead) + a → [ + q
+            'ê') result+='[e' ;;  # ^ (dead) + e → [ + e
+            'î') result+='[i' ;;  # ^ (dead) + i → [ + i
+            'ô') result+='[o' ;;  # ^ (dead) + o → [ + o
+            'û') result+='[u' ;;  # ^ (dead) + u → [ + u
+
             # Circumflex accent (uppercase)
-            'Â') result+='Q' ;;
-            'Ê') result+='E' ;;
-            'Î') result+='I' ;;
-            'Ô') result+='O' ;;
-            'Û') result+='U' ;;
-            
-            # Diaeresis/Umlaut (lowercase)
-            'ä') result+='q' ;;
-            'ë') result+='e' ;;
-            'ï') result+='i' ;;
-            'ö') result+='o' ;;
-            'ü') result+='u' ;;
-            
+            'Â') result+='[Q' ;;
+            'Ê') result+='[E' ;;
+            'Î') result+='[I' ;;
+            'Ô') result+='[O' ;;
+            'Û') result+='[U' ;;
+
+            # Diaeresis/Umlaut (lowercase) - dead key ¨ = Shift+^ = { on QWERTY
+            'ä') result+='{q' ;;
+            'ë') result+='{e' ;;
+            'ï') result+='{i' ;;
+            'ö') result+='{o' ;;
+            'ü') result+='{u' ;;
+
             # Diaeresis/Umlaut (uppercase)
-            'Ä') result+='Q' ;;
-            'Ë') result+='E' ;;
-            'Ï') result+='I' ;;
-            'Ö') result+='O' ;;
-            'Ü') result+='U' ;;
-            
-            # Acute accent (lowercase)
+            'Ä') result+='{Q' ;;
+            'Ë') result+='{E' ;;
+            'Ï') result+='{I' ;;
+            'Ö') result+='{O' ;;
+            'Ü') result+='{U' ;;
+
+            # Acute accent (lowercase) - no dead key on AZERTY, fallback to base letter
             'á') result+='q' ;;
             'í') result+='i' ;;
             'ó') result+='o' ;;
             'ú') result+='u' ;;
-            
+
             # Acute accent (uppercase)
             'Á') result+='Q' ;;
             'Í') result+='I' ;;
@@ -309,8 +309,8 @@ if [ "$file_mode" -eq 1 ]; then
         } >> /tmp/ydotool-translate-debug.log
     fi
 
-    # Pass translated content to ydotool-real via stdin
-    echo "$translated" | /usr/bin/ydotool-real type "${options[@]}" --file -
+    # Pass translated content to ydotool-real via stdin (without adding newline)
+    printf '%s' "$translated" | /usr/bin/ydotool-real type "${options[@]}" --file -
     exit $?
 fi
 
