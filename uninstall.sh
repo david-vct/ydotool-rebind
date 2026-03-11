@@ -16,6 +16,8 @@ fi
 if [ -f /usr/bin/ydotool-real ]; then
     echo "Restoring real ydotool..."
     rm -f /usr/bin/ydotool
+    rm -f /usr/bin/ydotool-wrapper.sh
+    rm -f /usr/bin/ydotool-translate.sh
     mv /usr/bin/ydotool-real /usr/bin/ydotool
 else
     echo "/usr/bin/ydotool-real not found"
