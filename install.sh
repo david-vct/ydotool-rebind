@@ -46,14 +46,33 @@ install -m 755 "$SCRIPT_DIR/src/ydotool-wrapper.sh" "$LIB_WRAPPER_PATH"
 install -m 755 "$SCRIPT_DIR/src/ydotool-translate.sh" "$LIB_DIR/ydotool-translate.sh"
 ln -sfn "$LIB_WRAPPER_PATH" "$WRAPPER_PATH"
 
+# Install layouts
+echo "Installing keyboard layouts..."
+mkdir -p /etc/ydotool-rebind/layouts
+cp "$SCRIPT_DIR"/layouts/*.sh /etc/ydotool-rebind/layouts/
+chmod +r /etc/ydotool-rebind/layouts/*.sh
+
 echo "Setting up AZERTY to QWERTY translator..."
 
+# Create default config if it doesn't exist
+if [ ! -f /etc/ydotool-rebind/config ]; then
+    echo "Creating default config (LAYOUT=fr)..."
+    echo "LAYOUT=fr" > /etc/ydotool-rebind/config
+else
+    echo "Config already exists, keeping current settings"
+fi
+
 echo ""
-echo "✅ Installation successful!"
+echo "Installation successful!"
+echo ""
+echo "Configuration: /etc/ydotool-rebind/config"
+echo "Available layouts: $(ls /etc/ydotool-rebind/layouts/ | sed 's/\.sh//g' | tr '\n' ' ')"
 echo ""
 echo "Next steps:"
-echo "  1. Test with: ydotool type \"Hello\""
-echo "  2. Uninstall with: sudo ./uninstall.sh"
+echo "  1. Edit /etc/ydotool-rebind/config to set your layout (LAYOUT=fr|de|be|it)"
+echo "  2. Or set YDOTOOL_LAYOUT=xx environment variable"
+echo "  3. Test with: ydotool type \"Hello\""
+echo "  4. Uninstall with: sudo ./uninstall.sh"
 echo ""
 echo "Installed files:"
 echo "  - $WRAPPER_PATH -> $LIB_WRAPPER_PATH"

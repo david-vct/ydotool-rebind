@@ -40,4 +40,10 @@ if [ -f "$LEGACY_REAL_YDOTOOL" ]; then
     mv "$LEGACY_REAL_YDOTOOL" "$SYSTEM_YDOTOOL"
 fi
 
-echo "✅ Uninstallation successful!"
+# Remove config and layouts
+if [ -d /etc/ydotool-rebind ]; then
+    echo "Removing configuration and layouts..."
+    rm -rf /etc/ydotool-rebind
+fi
+
+echo "Uninstallation successful!"
