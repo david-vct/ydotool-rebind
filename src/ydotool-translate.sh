@@ -6,6 +6,13 @@
 # This script translates French AZERTY keyboard input to equivalent QWERTY keys
 # so that ydotool types the correct characters when run on an AZERTY system.
 
+SYSTEM_YDOTOOL="/usr/bin/ydotool"
+
+if [ ! -x "$SYSTEM_YDOTOOL" ]; then
+    echo "Error: ydotool not found at $SYSTEM_YDOTOOL" >&2
+    exit 1
+fi
+
 # Function to translate AZERTY to QWERTY
 translate_azerty_to_qwerty() {
     local text="$1"
@@ -240,8 +247,8 @@ while [ $# -gt 0 ]; do
             shift 2
             ;;
         -h|--help)
-            # Pass through help to ydotool-real
-            /usr/bin/ydotool-real type --help
+            # Pass through help to the system ydotool binary
+            "$SYSTEM_YDOTOOL" type --help
             exit 0
             ;;
         -d=*|--key-delay=*)
@@ -283,7 +290,7 @@ while [ $# -gt 0 ]; do
     esac
 done
 
-# If file mode, read file content, translate it, and pass to ydotool-real
+# If file mode, read file content, translate it, and pass to the system ydotool binary
 if [ "$file_mode" -eq 1 ]; then
     # Read from file or stdin
     if [ "$file_path" = "-" ]; then
@@ -309,8 +316,8 @@ if [ "$file_mode" -eq 1 ]; then
         } >> /tmp/ydotool-translate-debug.log
     fi
 
-    # Pass translated content to ydotool-real via stdin (without adding newline)
-    printf '%s' "$translated" | /usr/bin/ydotool-real type "${options[@]}" --file -
+    # Pass translated content via stdin without adding a newline
+    printf '%s' "$translated" | "$SYSTEM_YDOTOOL" type "${options[@]}" --file -
     exit $?
 fi
 
@@ -328,10 +335,10 @@ if [ -n "$DEBUG" ]; then
         echo "Text: $text"
         echo "File mode: $file_mode"
         echo "Translated: $translated"
-        echo "Command executed: /usr/bin/ydotool-real type ${options[*]} \"$translated\""
+        echo "Command executed: $SYSTEM_YDOTOOL type ${options[*]} \"$translated\""
         echo ""
     } >> /tmp/ydotool-translate-debug.log
 fi
 
-# Type the translated text using ydotool-real
-/usr/bin/ydotool-real type "${options[@]}" "$translated"
+# Type the translated text using the system ydotool binary
+"$SYSTEM_YDOTOOL" type "${options[@]}" "$translated"
