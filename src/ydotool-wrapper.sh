@@ -3,11 +3,9 @@
 # Wrapper for ydotool that translates AZERTY to QWERTY for 'type' command
 # This allows using ydotool with French AZERTY keyboards
 
-# Find the real ydotool (renamed to ydotool-real)
-REAL_YDOTOOL="/usr/bin/ydotool-real"
-# Resolve the real path of this script (follows symlinks)
-SCRIPT_REAL_PATH="$(readlink -f "$0")"
-TRANSLATOR="$(dirname "$SCRIPT_REAL_PATH")/ydotool-translate.sh"
+PROJECT_NAME="ydotool-rebind"
+SYSTEM_YDOTOOL="/usr/bin/ydotool"
+TRANSLATOR="/usr/local/lib/$PROJECT_NAME/ydotool-translate.sh"
 
 # Check if translator exists
 if [ ! -f "$TRANSLATOR" ]; then
@@ -16,8 +14,8 @@ if [ ! -f "$TRANSLATOR" ]; then
 fi
 
 # Check if real ydotool exists
-if [ ! -f "$REAL_YDOTOOL" ]; then
-    echo "Error: original ydotool not found at $REAL_YDOTOOL" >&2
+if [ ! -x "$SYSTEM_YDOTOOL" ]; then
+    echo "Error: ydotool not found at $SYSTEM_YDOTOOL" >&2
     exit 1
 fi
 
@@ -29,5 +27,5 @@ if [ "$1" = "type" ]; then
     "$TRANSLATOR" "$@"
 else
     # Pass all other commands directly to real ydotool
-    "$REAL_YDOTOOL" "$@"
+    "$SYSTEM_YDOTOOL" "$@"
 fi

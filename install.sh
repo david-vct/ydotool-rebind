@@ -4,6 +4,15 @@
 
 set -e
 
+PROJECT_NAME="ydotool-rebind"
+PREFIX="/usr/local"
+BIN_DIR="$PREFIX/bin"
+LIB_DIR="$PREFIX/lib/$PROJECT_NAME"
+LIB_WRAPPER_PATH="$LIB_DIR/ydotool-wrapper.sh"
+WRAPPER_PATH="$BIN_DIR/ydotool"
+SYSTEM_YDOTOOL="/usr/bin/ydotool"
+LEGACY_REAL_YDOTOOL="/usr/bin/ydotool-real"
+
 echo "Installing ydotool-rebind..."
 
 # Check if running as root
@@ -12,36 +21,38 @@ if [ "$EUID" -ne 0 ]; then
    exit 1
 fi
 
-# Check if ydotool is installed
-if ! command -v ydotool &> /dev/null; then
-    echo "ydotool is not installed. Please install ydotool first"
+# Check if ydotool is installed in the system path
+if [ ! -x "$SYSTEM_YDOTOOL" ] && [ ! -x "$LEGACY_REAL_YDOTOOL" ]; then
+    echo "ydotool is not installed in /usr/bin. Please install ydotool first"
     exit 1
 fi
 
 # Get the directory of this script
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-# Check if ydotool is already wrapped
-if [ -f /usr/bin/ydotool-real ]; then
-    echo "ydotool appears to be already wrapped"
-else
-    echo "Backing up real ydotool..."
-    mv /usr/bin/ydotool /usr/bin/ydotool-real
+# Clean up legacy installation if present
+if [ -f "$LEGACY_REAL_YDOTOOL" ]; then
+    echo "Legacy installation detected, restoring system ydotool..."
+    rm -f /usr/bin/ydotool
+    rm -f /usr/bin/ydotool-wrapper.sh
+    rm -f /usr/bin/ydotool-translate.sh
+    mv "$LEGACY_REAL_YDOTOOL" "$SYSTEM_YDOTOOL"
 fi
 
-# Install the wrapper and translator
-echo "Installing ydotool wrapper..."
-cp "$SCRIPT_DIR/src/ydotool-wrapper.sh"  /usr/bin/ydotool-wrapper.sh
-cp "$SCRIPT_DIR/src/ydotool-translate.sh"  /usr/bin/ydotool-translate.sh
-ln -sf /usr/bin/ydotool-wrapper.sh /usr/bin/ydotool
-chmod +x /usr/bin/ydotool-wrapper.sh
-chmod +x /usr/bin/ydotool-translate.sh
+# Install the wrapper and internal helper scripts
+echo "Installing ydotool wrapper into $LIB_DIR and linking it from $BIN_DIR..."
+install -d "$BIN_DIR" "$LIB_DIR"
+install -m 755 "$SCRIPT_DIR/src/ydotool-wrapper.sh" "$LIB_WRAPPER_PATH"
+install -m 755 "$SCRIPT_DIR/src/ydotool-translate.sh" "$LIB_DIR/ydotool-translate.sh"
+ln -sfn "$LIB_WRAPPER_PATH" "$WRAPPER_PATH"
 
 # Install layouts
 echo "Installing keyboard layouts..."
 mkdir -p /etc/ydotool-rebind/layouts
 cp "$SCRIPT_DIR"/layouts/*.sh /etc/ydotool-rebind/layouts/
 chmod +r /etc/ydotool-rebind/layouts/*.sh
+
+echo "Setting up AZERTY to QWERTY translator..."
 
 # Create default config if it doesn't exist
 if [ ! -f /etc/ydotool-rebind/config ]; then
@@ -62,4 +73,9 @@ echo "  1. Edit /etc/ydotool-rebind/config to set your layout (LAYOUT=fr|de|be|i
 echo "  2. Or set YDOTOOL_LAYOUT=xx environment variable"
 echo "  3. Test with: ydotool type \"Hello\""
 echo "  4. Uninstall with: sudo ./uninstall.sh"
+echo ""
+echo "Installed files:"
+echo "  - $WRAPPER_PATH -> $LIB_WRAPPER_PATH"
+echo "  - $LIB_WRAPPER_PATH"
+echo "  - $LIB_DIR/ydotool-translate.sh"
 echo ""

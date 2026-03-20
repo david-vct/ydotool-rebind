@@ -4,6 +4,13 @@
 # Translates text from a source keyboard layout to QWERTY
 # so that ydotool types the correct characters on non-QWERTY systems.
 
+SYSTEM_YDOTOOL="/usr/bin/ydotool"
+
+if [ ! -x "$SYSTEM_YDOTOOL" ]; then
+    echo "Error: ydotool not found at $SYSTEM_YDOTOOL" >&2
+    exit 1
+fi
+
 # Detect which keyboard layout to use
 # Cascade: YDOTOOL_LAYOUT env → config file → setxkbmap → localectl → fallback fr
 detect_layout() {
@@ -160,7 +167,7 @@ while [ $# -gt 0 ]; do
         -e|--escape)
             options+=("$1" "$2"); shift 2 ;;
         -h|--help)
-            /usr/bin/ydotool-real type --help; exit 0 ;;
+            "$SYSTEM_YDOTOOL" type --help; exit 0 ;;
         -d=*|--key-delay=*)
             options+=("$1"); shift ;;
         -H=*|--key-hold=*)
@@ -180,7 +187,7 @@ while [ $# -gt 0 ]; do
     esac
 done
 
-# File mode: read, translate, pass via stdin
+# If file mode, read file content, translate it, and pass to the system ydotool binary
 if [ "$file_mode" -eq 1 ]; then
     if [ "$file_path" = "-" ]; then
         file_content=$(cat)
@@ -204,7 +211,8 @@ if [ "$file_mode" -eq 1 ]; then
         } >> /tmp/ydotool-translate-debug.log
     fi
 
-    printf '%s' "$translated" | /usr/bin/ydotool-real type "${options[@]}" --file -
+    # Pass translated content via stdin without adding a newline
+    printf '%s' "$translated" | "$SYSTEM_YDOTOOL" type "${options[@]}" --file -
     exit $?
 fi
 
@@ -220,9 +228,10 @@ if [ -n "$DEBUG" ]; then
         echo "Options: ${options[*]}"
         echo "Text: $text"
         echo "Translated: $translated"
-        echo "Command executed: /usr/bin/ydotool-real type ${options[*]} \"$translated\""
+        echo "Command executed: $SYSTEM_YDOTOOL type ${options[*]} \"$translated\""
         echo ""
     } >> /tmp/ydotool-translate-debug.log
 fi
 
-/usr/bin/ydotool-real type "${options[@]}" "$translated"
+# Type the translated text using the system ydotool binary
+"$SYSTEM_YDOTOOL" type "${options[@]}" "$translated"
