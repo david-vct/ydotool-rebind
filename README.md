@@ -22,6 +22,13 @@ sudo ./install.sh
 
 **Requirements:** `ydotool` installed, Bash 4.0+, root access
 
+The installer follows standard Linux filesystem conventions:
+
+- main wrapper executable: `/usr/local/bin/ydotool`
+- internal translator script: `/usr/local/lib/ydotool-rebind/ydotool-translate.sh`
+
+If an older version was previously installed in `/usr/bin`, the installer automatically migrates it to the new layout.
+
 ## Usage
 
 After installation, use `ydotool` normally:
@@ -53,6 +60,8 @@ ydotool mousemove 100 100
 ```bash
 sudo ./uninstall.sh
 ```
+
+The uninstall script removes the current `/usr/local` installation and also restores the original `/usr/bin/ydotool` if it detects a legacy installation.
 
 ## License
 
