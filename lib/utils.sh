@@ -11,12 +11,12 @@ YDTR_DEFAULT_PREFIX="/usr/local"
 YDTR_DEFAULT_SYSTEM_YDOTOOL="/usr/bin/ydotool"
 YDTR_DEBUG_LOG_PATH="${YDTR_DEBUG_LOG:-/tmp/ydotool-rebind-debug.log}"
 
-declare -gA YDTR_KEYMAP=()
-declare -ga YDTR_TYPE_OPTIONS=()
-declare -g YDTR_TYPE_FILE_MODE=0
-declare -g YDTR_TYPE_FILE_PATH=""
-declare -g YDTR_TYPE_TEXT=""
-declare -g YDTR_TYPE_SHOW_HELP=0
+declare -A YDTR_KEYMAP=()
+declare -a YDTR_TYPE_OPTIONS=()
+declare YDTR_TYPE_FILE_MODE=0
+declare YDTR_TYPE_FILE_PATH=""
+declare YDTR_TYPE_TEXT=""
+declare YDTR_TYPE_SHOW_HELP=0
 
 ydtr_lib_dir() {
     local source_path="${BASH_SOURCE[0]}"
