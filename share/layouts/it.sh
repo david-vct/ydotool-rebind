@@ -1,4 +1,5 @@
 #!/bin/bash
+
 # Italian layout mapping to QWERTY
 # Source: /usr/share/X11/xkb/symbols/it (basic) + latin(type4)
 #
@@ -8,7 +9,7 @@
 # Only non-identity mappings are listed.
 # Characters not in this map pass through unchanged.
 
-KEYMAP=(
+YDTR_KEYMAP=(
     # ===== TLDE: \ / | → QWERTY ` / ~ =====
     ['\']='`'
     ['|']='~'
