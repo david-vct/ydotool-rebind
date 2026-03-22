@@ -1,6 +1,14 @@
 #!/bin/bash
 
-YDTR_KEYMAP=(
+# French AZERTY layout mapping to QWERTY
+# Source: /usr/share/X11/xkb/symbols/fr (basic)
+#
+# Only non-identity mappings are listed.
+# Characters not in this map pass through unchanged.
+
+KEYMAP=(
+    # ===== NUMBER ROW =====
+    # Unshifted
     ['&']='1'
     ['é']='2'
     ['"']='3'
@@ -12,6 +20,8 @@ YDTR_KEYMAP=(
     ['ç']='9'
     ['à']='0'
     [')']='-'
+
+    # Shifted (digits produce symbols on QWERTY)
     ['1']='!'
     ['2']='@'
     ['3']='#'
@@ -23,11 +33,15 @@ YDTR_KEYMAP=(
     ['9']='('
     ['0']=')'
     ['°']='_'
+
+    # Accented uppercase on number row
     ['É']='2'
     ['È']='7'
     ['À']='0'
     ['Ç']='9'
     ['Ù']="'"
+
+    # ===== CIRCUMFLEX ACCENTS (dead key ^ = [ on QWERTY) =====
     ['â']='[q'
     ['ê']='[e'
     ['î']='[i'
@@ -38,6 +52,8 @@ YDTR_KEYMAP=(
     ['Î']='[I'
     ['Ô']='[O'
     ['Û']='[U'
+
+    # ===== DIAERESIS (dead key ¨ = Shift+^ = { on QWERTY) =====
     ['ä']='{q'
     ['ë']='{e'
     ['ï']='{i'
@@ -48,6 +64,8 @@ YDTR_KEYMAP=(
     ['Ï']='{I'
     ['Ö']='{O'
     ['Ü']='{U'
+
+    # ===== ACUTE ACCENT (no dead key, fallback to base letter) =====
     ['á']='q'
     ['í']='i'
     ['ó']='o'
@@ -56,29 +74,42 @@ YDTR_KEYMAP=(
     ['Í']='I'
     ['Ó']='O'
     ['Ú']='U'
+
+    # ===== GRAVE ACCENT =====
     ['ò']='o'
     ['ì']='i'
     ['ù']="'"
+
+    # ===== LIGATURES =====
     ['œ']='oe'
     ['Œ']='OE'
     ['æ']='ae'
     ['Æ']='AE'
     ['ñ']='n'
     ['Ñ']='N'
+
+    # ===== LETTER ROWS =====
+    # Top row (AZERTY → QWERTY position)
     ['a']='q'
     ['z']='w'
     ['A']='Q'
     ['Z']='W'
+
+    # Home row
     ['q']='a'
     ['Q']='A'
     ['m']=';'
     ['M']=':'
+
+    # Bottom row
     ['w']='z'
     ['W']='Z'
     [',']='m'
     [';']=','
     [':']='.'
     ['!']='/'
+
+    # Shifted bottom row
     ['?']='M'
     ['.']='<'
     ['/']='>'
