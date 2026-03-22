@@ -6,7 +6,7 @@
 # Only non-identity mappings are listed.
 # Characters not in this map pass through unchanged.
 
-KEYMAP=(
+YDTR_KEYMAP=(
     # ===== NUMBER ROW =====
     # Unshifted
     ['&']='1'
