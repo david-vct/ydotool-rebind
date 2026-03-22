@@ -1,6 +1,6 @@
 # ydotool-rebind
 
-A wrapper for `ydotool` that translates keyboard input from non-QWERTY layouts to QWERTY, allowing proper text input with AZERTY, QWERTZ, and other keyboard layouts.
+A Bash wrapper around `ydotool` that translates keyboard input from non-QWERTY layouts to QWERTY, allowing proper text input with AZERTY, QWERTZ, and other keyboard layouts.
 
 ## What is this?
 
@@ -14,14 +14,14 @@ A wrapper for `ydotool` that translates keyboard input from non-QWERTY layouts t
 
 ## Supported layouts
 
-| Layout | Description | Key differences |
-|--------|-------------|-----------------|
-| `fr`   | French AZERTY | a/q, z/w, m swaps, accents |
-| `de`   | German QWERTZ | z/y swap, umlauts, sharp s |
-| `be`   | Belgian AZERTY | Similar to FR, different number row |
-| `it`   | Italian | QWERTY-based, accented vowels on special keys |
-| `es`   | Spanish | QWERTY-based, ñ, ç, ¡/¿, dead keys for accents |
-| `us`   | US QWERTY | Passthrough (no translation) |
+| Layout | Description    | Key differences                                |
+| ------ | -------------- | ---------------------------------------------- |
+| `fr`   | French AZERTY  | a/q, z/w, m swaps, accents                     |
+| `de`   | German QWERTZ  | z/y swap, umlauts, sharp s                     |
+| `be`   | Belgian AZERTY | Similar to FR, different number row            |
+| `it`   | Italian        | QWERTY-based, accented vowels on special keys  |
+| `es`   | Spanish        | QWERTY-based, ñ, ç, ¡/¿, dead keys for accents |
+| `us`   | US QWERTY      | Passthrough (no translation)                   |
 
 ## Installation
 
@@ -33,10 +33,22 @@ sudo ./install.sh
 
 **Requirements:** `ydotool` installed, Bash 4.0+, root access
 
-The installer follows standard Linux filesystem conventions:
+The project now follows standard Bash naming conventions in the repository and on disk:
 
-- main wrapper executable: `/usr/local/bin/ydotool`
-- internal translator script: `/usr/local/lib/ydotool-rebind/ydotool-translate.sh`
+- `bin/ydotool-rebind.sh`: explicit development entrypoint
+- `lib/translate.sh`: translation library and CLI helper
+- `lib/layout.sh`: layout detection and loading
+- `lib/utils.sh`: shared utility functions
+- `share/layouts/*.sh`: layout data files
+
+Installed paths under `/usr/local`:
+
+- `/usr/local/bin/ydotool`
+- `/usr/local/lib/ydotool-rebind/translate.sh`
+- `/usr/local/lib/ydotool-rebind/layout.sh`
+- `/usr/local/lib/ydotool-rebind/utils.sh`
+- `/usr/local/share/ydotool-rebind/layouts/*.sh`
+- `/usr/local/etc/ydotool-rebind.conf`
 
 If an older version was previously installed in `/usr/bin`, the installer automatically migrates it to the new layout.
 
@@ -45,7 +57,7 @@ If an older version was previously installed in `/usr/bin`, the installer automa
 The layout is detected automatically by cascade:
 
 1. `YDOTOOL_LAYOUT` environment variable
-2. `/etc/ydotool-rebind/config` file (`LAYOUT=fr`)
+2. `/usr/local/etc/ydotool-rebind.conf` file (`LAYOUT=fr`)
 3. `setxkbmap` auto-detection (X11)
 4. `localectl` auto-detection (systemd)
 5. Fallback: `fr`
@@ -54,7 +66,7 @@ To change the default layout:
 
 ```bash
 # Edit config file
-sudo nano /etc/ydotool-rebind/config
+sudo nano /usr/local/etc/ydotool-rebind.conf
 # Set: LAYOUT=de
 
 # Or use environment variable
@@ -79,9 +91,17 @@ ydotool mousemove 100 100
 
 ## How it works
 
-1. Wrapper intercepts all `ydotool` commands
-2. For `type` commands: loads the keyboard layout mapping and translates text
-3. Passes translated result to real `ydotool`
+1. `bin/ydotool-rebind.sh` intercepts all `ydotool` commands.
+2. For `type`, it sources `lib/utils.sh`, `lib/layout.sh`, and `lib/translate.sh`, then parses options, loads the keyboard layout mapping, and translates the input.
+3. The wrapper then forwards only the translated payload to the real system `ydotool`.
+
+The library can also be executed directly for debugging or scripting:
+
+```bash
+./lib/translate.sh detect-layout
+./lib/translate.sh translate "Bonjour, ça va ?"
+./lib/translate.sh translate -f /tmp/test.txt
+```
 
 ## Supported characters
 
@@ -94,7 +114,7 @@ ydotool mousemove 100 100
 
 ```bash
 DEBUG=1 ydotool type "test"
-# Log: /tmp/ydotool-translate-debug.log
+# Log: /tmp/ydotool-rebind-debug.log
 ```
 
 ## Uninstall
@@ -103,7 +123,7 @@ DEBUG=1 ydotool type "test"
 sudo ./uninstall.sh
 ```
 
-The uninstall script removes the current `/usr/local` installation and also restores the original `/usr/bin/ydotool` if it detects a legacy installation.
+The uninstall script removes the `/usr/local` installation and also restores the original `/usr/bin/ydotool` if it detects a legacy installation.
 
 ## License
 
