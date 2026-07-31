@@ -29,24 +29,40 @@ ydtr_detect_layout() {
     fi
 
     if command -v setxkbmap >/dev/null 2>&1; then
-        local x11_layout
+        local x11_layout x11_variant
         x11_layout="$(setxkbmap -query 2>/dev/null | grep -m1 '^layout:' | awk '{print $2}' | cut -d, -f1)"
+        x11_variant="$(setxkbmap -query 2>/dev/null | grep -m1 '^variant:' | awk '{print $2}' | cut -d, -f1)"
         if [[ -n "$x11_layout" ]]; then
-            printf '%s\n' "$x11_layout"
+            ydtr_resolve_layout_variant "$x11_layout" "$x11_variant"
             return 0
         fi
     fi
 
     if command -v localectl >/dev/null 2>&1; then
-        local localectl_layout
+        local localectl_layout localectl_variant
         localectl_layout="$(localectl status 2>/dev/null | grep -m1 'X11 Layout' | awk '{print $3}' | cut -d, -f1)"
+        localectl_variant="$(localectl status 2>/dev/null | grep -m1 'X11 Variant' | awk '{print $3}' | cut -d, -f1)"
         if [[ -n "$localectl_layout" ]]; then
-            printf '%s\n' "$localectl_layout"
+            ydtr_resolve_layout_variant "$localectl_layout" "$localectl_variant"
             return 0
         fi
     fi
 
     printf '%s\n' 'fr'
+}
+
+# Prefer a variant-specific layout file (e.g. ch + fr → ch_fr)
+# when one exists, otherwise fall back to the base layout name.
+ydtr_resolve_layout_variant() {
+    local layout="$1"
+    local variant="${2:-}"
+
+    if [[ -n "$variant" ]] && ydtr_layout_path "${layout}_${variant}" >/dev/null 2>&1; then
+        printf '%s\n' "${layout}_${variant}"
+        return 0
+    fi
+
+    printf '%s\n' "$layout"
 }
 
 ydtr_layout_path() {

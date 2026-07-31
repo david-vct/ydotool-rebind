@@ -63,7 +63,7 @@ echo "Configuration: $CONFIG_TARGET"
 echo "Available layouts: $(find "$LAYOUT_DIR" -maxdepth 1 -type f -name '*.sh' -printf '%f\n' | sed 's/\.sh$//' | sort | tr '\n' ' ')"
 echo
 echo "Next steps:"
-echo "  1. Edit $CONFIG_TARGET to set your layout (LAYOUT=fr|de|be|it|es|us)"
+echo "  1. Edit $CONFIG_TARGET to set your layout (LAYOUT=fr|de|be|it|es|ch_fr|us)"
 echo "  2. Or set YDOTOOL_LAYOUT=xx as an environment variable"
 echo "  3. Test with: ydotool type \"Hello\""
 echo "  4. Uninstall with: sudo ./uninstall.sh"
