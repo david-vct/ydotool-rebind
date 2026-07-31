@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Added
+
+- **Swiss French layout** (`ch_fr`): Support for the Swiss French QWERTZ keyboard (è/é/à direct keys, dead keys for circumflex, grave, and diaeresis)
+- **Variant-aware detection**: `setxkbmap`/`localectl` auto-detection now reads the XKB variant and prefers a matching variant layout file (e.g. `ch` + `fr` → `ch_fr`)
+
 ## [v1.2.0] - 2026-04-16
 
 ### Added
