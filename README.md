@@ -14,14 +14,15 @@ A Bash wrapper around `ydotool` that translates keyboard input from non-QWERTY l
 
 ## Supported layouts
 
-| Layout | Description    | Key differences                                |
-| ------ | -------------- | ---------------------------------------------- |
-| `fr`   | French AZERTY  | a/q, z/w, m swaps, accents                     |
-| `de`   | German QWERTZ  | z/y swap, umlauts, sharp s                     |
-| `be`   | Belgian AZERTY | Similar to FR, different number row            |
-| `it`   | Italian        | QWERTY-based, accented vowels on special keys  |
-| `es`   | Spanish        | QWERTY-based, ñ, ç, ¡/¿, dead keys for accents |
-| `us`   | US QWERTY      | Passthrough (no translation)                   |
+| Layout  | Description         | Key differences                                |
+| ------- | ------------------- | ---------------------------------------------- |
+| `fr`    | French AZERTY       | a/q, z/w, m swaps, accents                     |
+| `de`    | German QWERTZ       | z/y swap, umlauts, sharp s                     |
+| `be`    | Belgian AZERTY      | Similar to FR, different number row            |
+| `it`    | Italian             | QWERTY-based, accented vowels on special keys  |
+| `es`    | Spanish             | QWERTY-based, ñ, ç, ¡/¿, dead keys for accents |
+| `ch_fr` | Swiss French QWERTZ | z/y swap, è/é/à direct keys, dead keys         |
+| `us`    | US QWERTY           | Passthrough (no translation)                   |
 
 ## Installation
 
@@ -62,6 +63,10 @@ The layout is detected automatically by cascade:
 4. `localectl` auto-detection (systemd)
 5. Fallback: `fr`
 
+Auto-detection is variant-aware: when the XKB variant matches a dedicated
+layout file, it is preferred over the base layout (e.g. layout `ch` with
+variant `fr` resolves to `ch_fr`).
+
 To change the default layout:
 
 ```bash
@@ -71,6 +76,7 @@ sudo nano /usr/local/etc/ydotool-rebind.conf
 
 # Or use environment variable
 YDOTOOL_LAYOUT=de ydotool type "Hallo Welt"
+YDOTOOL_LAYOUT=ch_fr ydotool type "Genève"
 ```
 
 ## Usage
